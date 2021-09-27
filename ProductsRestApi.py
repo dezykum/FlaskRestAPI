@@ -3,7 +3,26 @@ from flask_restful import reqparse
 from ProductModel import Products
 from ProductModel import *
 
+#status code errors handeling 
+@app.errorhandler(404)
+def handle_404_error(_error):
+    """Return a 404 http status code"""
+    return make_response(jsonify({'error': 'Not Found'}), 404)
+    
+@app.errorhandler(500)
+def handle_500_error(_error):
+    """Return a 500 http status code"""
+    return make_response(jsonify({'error': 'Internal server error occured'}), 500)
 
+@app.errorhandler(400)
+def handle_400_error(_error):
+    """Return a 400 http status code"""
+    return make_response(jsonify({'error': 'Misunderstood or Bad request'}), 400)
+    
+@app.errorhandler(401)
+def handle_401_error(_error):
+    """Return a 401 http status code"""
+    return make_response(jsonify({'error': 'Unauthorized'}), 401)
 
 @app.route('/products', methods=['GET', 'POST'])
 def api_products():
