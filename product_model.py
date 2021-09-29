@@ -1,7 +1,9 @@
-from flask import Flask
+"""
+Product Model Class and DB Initialization Module
+"""
 import os
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import json
 
 app = Flask(__name__)
 
@@ -11,12 +13,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db=SQLAlchemy(app)
 
 class Products(db.Model):
+    """
+    Model Class for Products
+    """
     name = db.Column(db.String(100))
     brand = db.Column(db.String(100))
     weight = db.Column(db.Integer)
     sku = db.Column(db.String(100), primary_key=True)
     available = db.Column(db.Boolean)
-
 
 INITIAL_DATA = [
     {
@@ -42,7 +46,6 @@ INITIAL_DATA = [
     }
 ]
 
-
 # Delete database file if it exists currently
 if os.path.exists('products.db'):
     os.remove('products.db')
@@ -52,7 +55,8 @@ db.create_all()
 
 # Iterate over the PEOPLE structure and populate the database
 for data in INITIAL_DATA:
-    d = Products(name=data['name'], brand=data['brand'], weight=data['weight'], sku=data['sku'], available=data['available'])
+    d = Products(name=data['name'], brand=data['brand'], weight=data['weight'], sku=data['sku'],
+    available=data['available'])
     db.session.add(d)
 
 db.session.commit()

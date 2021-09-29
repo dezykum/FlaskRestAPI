@@ -1,6 +1,6 @@
 import unittest
 import requests
-from ProductModel import *
+from product_model import *
 
 class TestAPI(unittest.TestCase):
     URL = "http://127.0.0.1:5000/products"
@@ -36,7 +36,7 @@ class TestAPI(unittest.TestCase):
         
     def test_2_post_product(self):
         resp = requests.post(self.URL, json=self.req_data)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 201)
         print("Test 2 completed")
       
     def test_3_get_specific_product(self):
