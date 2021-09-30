@@ -58,11 +58,12 @@ def api_products():
         data = {"sku": after_commit.sku, "message": "product "+ after_commit.sku + " created"}
         return Response(json.dumps(data), status=201, mimetype='application/json')
 
-@app.route('/products/<product_id>', methods=['GET', 'DELETE', 'PUT'])
+@app.route('/products/<product_id>', methods=['GET', 'DELETE', 'PATCH', 'PUT'])
 def api_each_products(product_id):
     """
     GET  /products/<product_id>   returns a JSON response
-    PUT   /products/<product_id>   returns a JSON response
+    PATCH   /products/<product_id>   returns a JSON response
+    PUT     /products/<product_id>   returns a JSON response
     DELETE  /products/<product_id>   returns a JSON response
     """
     if request.method == "GET":
@@ -80,11 +81,35 @@ def api_each_products(product_id):
         db.session.delete(task)
         db.session.commit()
         return Response("Product deleted", 200)
-    elif request.method == "PUT":
+    elif request.method == "PATCH":
         req_data = request.get_json()
         task = Products.query.filter_by(sku=product_id).first()
         if not task:
             return Response("Product Does Not Exist", 404)
+        if req_data['name']:
+            task.name = req_data['name']
+        if req_data['brand']:
+            task.brand = req_data['brand']
+        if req_data['weight']:
+            task.weight = req_data['weight']
+        if req_data['sku']:
+            task.sku = req_data['sku']
+        task.available = req_data['available']
+        db.session.commit()
+        data = {"sku": task.sku, "message": "Product "+ task.sku + " has been updated"}
+        return Response(json.dumps(data), 200)
+    elif request.method == "PUT":
+        req_data = request.get_json()
+        sku_id = req_data['sku']
+        task = Products.query.filter_by(sku=sku_id).first()
+        if not task:
+            product_obj = Products(name=req_data['name'], brand=req_data['brand'],
+            weight=req_data['weight'], sku=req_data['sku'], available=req_data['available'])
+            db.session.add(product_obj)
+            db.session.commit()
+            after_commit = Products.query.filter_by(sku=sku_id).first()
+            data = {"sku": after_commit.sku, "message": "product "+ after_commit.sku + " created"}
+            return Response(json.dumps(data), status=201, mimetype='application/json')
         if req_data['name']:
             task.name = req_data['name']
         if req_data['brand']:

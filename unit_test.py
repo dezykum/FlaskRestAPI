@@ -27,6 +27,22 @@ class TestAPI(unittest.TestCase):
     "sku": "200",
     "available": False
     }
+
+    create_with_put_data = {
+    "name": "GHI",
+    "brand": "GHI_Brand",
+    "weight": 200,
+    "sku": "200435",
+    "available": True
+    }
+
+    update_with_put_data = {
+    "name": "GHI_updated",
+    "brand": "GHI_Brand",
+    "weight": 200,
+    "sku": "200435",
+    "available": False
+    }
     
     def test_1_get_all_products(self):
         resp = requests.get(self.URL)
@@ -51,11 +67,23 @@ class TestAPI(unittest.TestCase):
         print("Test 4 completed")
     
     def test_5_update(self):
-        resp = requests.put(self.URL + '/200', json=self.update_data)
+        resp = requests.patch(self.URL + '/200', json=self.update_data)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['sku'], self.update_data['sku'])
         self.assertEqual(resp.json()['message'], "Product "+self.update_data['sku']+" has been updated")
         print("Test 5 completed")
+
+    def test_6_create_with_put(self):
+        resp = requests.put(self.URL + '/200435', json=self.create_with_put_data)
+        self.assertEqual(resp.status_code, 201)
+        print("Test 6 completed")
+
+    def test_7_update_with_put(self):
+        resp = requests.put(self.URL + '/200435', json=self.update_with_put_data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['sku'], self.update_with_put_data['sku'])
+        self.assertEqual(resp.json()['message'], "Product "+self.update_with_put_data['sku']+" has been updated")
+        print("Test 7 completed")
         
 if __name__ == "__main__":
     test_api = TestAPI()
@@ -64,3 +92,5 @@ if __name__ == "__main__":
     test_api.test_3_get_specific_product()
     test_api.test_4_delete()
     test_api.test_5_update()
+    test_api.test_6_create_with_put()
+    test_api.test_7_update_with_put()
