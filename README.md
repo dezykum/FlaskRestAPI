@@ -6,13 +6,13 @@
 
 > Download the project, unzip it, go to the folder path in command prompt.
 
-# Install dependencies using pip
+### Install dependencies using pip
 $ pip install -r requirements.txt
 
-# To run the app with database, run the ProductsRestApi.py file
+### To run the app with database, run the ProductsRestApi.py file
 $ python products_restapi.py
 
-# A server will be opened on port 5000. (http://localhost:5000)
+### A server will be opened on port 5000. (http://localhost:5000)
 
 ### Endpoints
 * GET     /products
