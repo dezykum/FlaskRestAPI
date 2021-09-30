@@ -100,14 +100,13 @@ def api_each_products(product_id):
         return Response(json.dumps(data), 200)
     elif request.method == "PUT":
         req_data = request.get_json()
-        sku_id = req_data['sku']
-        task = Products.query.filter_by(sku=sku_id).first()
+        task = Products.query.filter_by(sku=product_id).first()
         if not task:
             product_obj = Products(name=req_data['name'], brand=req_data['brand'],
             weight=req_data['weight'], sku=req_data['sku'], available=req_data['available'])
             db.session.add(product_obj)
             db.session.commit()
-            after_commit = Products.query.filter_by(sku=sku_id).first()
+            after_commit = Products.query.filter_by(sku=product_id).first()
             data = {"sku": after_commit.sku, "message": "product "+ after_commit.sku + " created"}
             return Response(json.dumps(data), status=201, mimetype='application/json')
         if req_data['name']:
